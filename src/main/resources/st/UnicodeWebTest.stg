@@ -16,7 +16,7 @@ s(x,y) ::= "$x$$y$"
 
 page(title,body) ::= <<
 <!doctype html>
-<html lang="en" class="solarizedLight">
+<html lang="en" class="fontFeatures unicodeWebFonts solarizedLight">
     <head>
         <meta charset="utf-8">
         <title>$title$</title>
