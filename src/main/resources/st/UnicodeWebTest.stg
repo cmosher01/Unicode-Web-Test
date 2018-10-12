@@ -1,0 +1,55 @@
+delimiters "$", "$"
+
+fixedPage(ctab,pager) ::= "$page(fixedTitle(pager),s(nav(p(fixedHeader(pager))),table(ctab:fixedRow())))$"
+fixedTitle(pager) ::= "Unicode ($pager.start$)"
+fixedHeader(pager) ::= "<a href=\"?start=$pager.prev$\">$\u27F8$ previous</a> $\u3018$ $pager.start$ $\u3019$ <a href=\"?start=$pager.next$\">next $\u27F9$</a>"
+fixedRow(crow) ::= "$tr(crow:fixedCell())$"
+fixedCell(ccell) ::= "$tdc(span(ccell),ccell.cssClass,ccell.codepointDisplay)$"
+
+nav(x) ::= "<nav>$x$</nav>"
+table(x) ::= "<table>$x$</table>"
+tr(x) ::= "<tr>$x$</tr>"
+p(x) ::= "<p>$x$</p>"
+tdc(x,c,h) ::= "<td title=\"$h$\" class=\"$c$\">$x$</td>"
+span(x) ::= "$\n$<span>$x$</span>"
+s(x,y) ::= "$x$$y$"
+
+page(title,body) ::= <<
+<!doctype html>
+<html lang="en" class="solarizedLight">
+    <head>
+        <meta charset="utf-8">
+        <title>$title$</title>
+        <style>
+            @import url("https://rawgit.com/cmosher01/PlainWebCss/master/src/main/resources/css/reset.css");
+            @import url("https://rawgit.com/cmosher01/PlainWebCss/master/src/main/resources/css/fonts.css");
+            @import url("https://rawgit.com/cmosher01/PlainWebCss/master/src/main/resources/css/solarized.css");
+            a:hover {
+                background-color: var(--sol-base2);
+                color: var(--sol-orange);
+            }
+            table {
+                width: 100%;
+            }
+            tr:nth-child(odd) {
+                background-color: var(--sol-base2);
+            }
+            td {
+                border: 1px solid black;
+                text-align: center;
+                vertical-align: middle;
+            }
+            .invalid {
+                color: var(--sol-base0);
+                background-color: var(--sol-base03);
+            }
+            nav {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        $body$
+    </body>
+</html>
+>>
