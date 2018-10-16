@@ -2,9 +2,13 @@ delimiters "$", "$"
 
 fixedPage(ctab,pager) ::= "$page(fixedTitle(pager),s(nav(p(fixedHeader(pager))),table(ctab:fixedRow())))$"
 fixedTitle(pager) ::= "Unicode ($pager.start$)"
-fixedHeader(pager) ::= "<a href=\"?start=$pager.prev$\">$\u27F8$ previous</a> $\u3018$ $pager.start$ $\u3019$ <a href=\"?start=$pager.next$\">next $\u27F9$</a>"
+fixedHeader(pager) ::= "<a href=\"?start=$pager.prev$&compact=$pager.compact$&rowlen=$pager.rowlen$\">$\u27F8$ previous</a> $\u3018$ $pager.start$ $\u3019$ <a href=\"?start=$pager.next$&compact=$pager.compact$&rowlen=$pager.rowlen$\">next $\u27F9$</a>"
 fixedRow(crow) ::= "$tr(crow:fixedCell())$"
 fixedCell(ccell) ::= "$tdc(span(ccell),ccell.cssClass,ccell.codepointDisplay)$"
+
+compactPage(ctab,pager) ::= "$page(fixedTitle(pager),s(nav(p(fixedHeader(pager))),ctab:compactRow()))$"
+compactRow(crow) ::= "$\n$<span>$crow:compactCell()$</span><br>"
+compactCell(ccell) ::= "$ccell$"
 
 nav(x) ::= "<nav>$x$</nav>"
 table(x) ::= "<table>$x$</table>"
