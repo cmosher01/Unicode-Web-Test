@@ -27,6 +27,11 @@ public class UnicodeCharacter {
             public String getCssClass() {
                 return "invalid";
             }
+
+            @Override
+            public boolean isValid() {
+                return false;
+            }
         };
     }
 
@@ -36,6 +41,10 @@ public class UnicodeCharacter {
 
     private boolean parseZC(String cat) {
         return cat.startsWith("Z") || cat.startsWith("C");
+    }
+
+    public boolean isValid() {
+        return true;
     }
 
     public long codepoint() {

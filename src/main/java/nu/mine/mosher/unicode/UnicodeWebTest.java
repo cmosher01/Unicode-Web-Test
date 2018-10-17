@@ -29,9 +29,10 @@ public class UnicodeWebTest {
                     final long start = longParam(session, "start", 0L);
                     final boolean compact = booleanParam(session, "compact", false);
                     final int rowlen = (int)1L << Longs.constrainToRange(longParam(session, "row", 0x5L), 0L, LongMath.log2(PAGE_SIZE, CEILING));
+                    final boolean invalid = booleanParam(session, "invalid", true);
                     return newFixedLengthResponse(
                             Response.Status.OK, MIME_HTML,
-                            fixedPage(stg, unicodeMgr, start, new Pager(start, unicodeMgr.getMaxCodepoint(), compact, rowlen)));
+                            fixedPage(stg, unicodeMgr, start, new Pager(start, unicodeMgr.getMaxCodepoint(), compact, rowlen, invalid)));
                 } catch (final Throwable e) {
                     throw new IllegalStateException(e);
                 }
@@ -76,14 +77,16 @@ public class UnicodeWebTest {
         public final long maxCodepoint;
         public final boolean compact;
         public final int rowlen;
+        public final boolean invalid;
 
-        Pager(long start, long maxCodepoint, boolean compact, int rowlen) {
+        Pager(long start, long maxCodepoint, boolean compact, int rowlen, boolean invalid) {
             this.start = start;
             this.prev = start - PAGE_SIZE;
             this.next = start + PAGE_SIZE;
             this.maxCodepoint = maxCodepoint;
             this.compact = compact;
             this.rowlen = rowlen;
+            this.invalid = invalid;
         }
 
         public String getStart() {
@@ -110,6 +113,10 @@ public class UnicodeWebTest {
 
         public boolean isCompact() {
             return this.compact;
+        }
+
+        public boolean isShowInvalid() {
+            return this.invalid;
         }
 
         private String f(long cp) {

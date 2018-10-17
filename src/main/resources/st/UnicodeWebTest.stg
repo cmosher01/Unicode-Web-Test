@@ -1,14 +1,14 @@
 delimiters "$", "$"
 
-fixedPage(ctab,pager) ::= "$page(fixedTitle(pager),s(nav(p(fixedHeader(pager))),table(ctab:fixedRow())))$"
+fixedPage(ctab,pager) ::= "$page(fixedTitle(pager),s(nav(p(fixedHeader(pager))),table(ctab:fixedRow(pager))))$"
 fixedTitle(pager) ::= "Unicode ($pager.start$)"
-fixedHeader(pager) ::= "<a href=\"?start=$pager.prev$&compact=$pager.compact$&rowlen=$pager.rowlen$\">$\u27F8$ previous</a> $\u3018$ $pager.start$ $\u3019$ <a href=\"?start=$pager.next$&compact=$pager.compact$&rowlen=$pager.rowlen$\">next $\u27F9$</a>"
-fixedRow(crow) ::= "$tr(crow:fixedCell())$"
-fixedCell(ccell) ::= "$tdc(span(ccell),ccell.cssClass,ccell.codepointDisplay)$"
+fixedHeader(pager) ::= "<a href=\"?start=$pager.prev$&compact=$pager.compact$&rowlen=$pager.rowlen$&invalid=$pager.invalid$\">$\u27F8$ previous</a> $\u3018$ $pager.start$ $\u3019$ <a href=\"?start=$pager.next$&compact=$pager.compact$&rowlen=$pager.rowlen$&invalid=$pager.invalid$\">next $\u27F9$</a>"
+fixedRow(crow,pager) ::= "$tr(crow:fixedCell(pager))$"
+fixedCell(ccell,pager) ::= "$tdc(span(compactCell(ccell,pager)),ccell.cssClass,ccell.codepointDisplay)$"
 
-compactPage(ctab,pager) ::= "$page(fixedTitle(pager),s(nav(p(fixedHeader(pager))),ctab:compactRow()))$"
-compactRow(crow) ::= "$\n$<span>$crow:compactCell()$</span><br>"
-compactCell(ccell) ::= "$ccell$"
+compactPage(ctab,pager) ::= "$page(fixedTitle(pager),s(nav(p(fixedHeader(pager))),ctab:compactRow(pager)))$"
+compactRow(crow,pager) ::= "$\n$<span>$crow:compactCell(pager)$</span><br>"
+compactCell(ccell,pager) ::= "$if(pager.showInvalid||ccell.valid)$$ccell$$else$&nbsp;$endif$"
 
 nav(x) ::= "<nav>$x$</nav>"
 table(x) ::= "<table>$x$</table>"
