@@ -28,7 +28,7 @@ public class UnicodeWebTest {
                 try {
                     final long start = longParam(session, "start", 0L);
                     final boolean compact = booleanParam(session, "compact", false);
-                    final int rowlen = (int)1L << Longs.constrainToRange(longParam(session, "row", 0x5L), 0L, LongMath.log2(PAGE_SIZE, CEILING));
+                    final int rowlen = (int)1L << Longs.constrainToRange(longParam(session, "rowlen", 0x5L), 0L, LongMath.log2(PAGE_SIZE, CEILING));
                     final boolean invalid = booleanParam(session, "invalid", true);
                     return newFixedLengthResponse(
                             Response.Status.OK, MIME_HTML,
@@ -94,7 +94,7 @@ public class UnicodeWebTest {
         }
 
         public int getRowlen() {
-            return this.rowlen;
+            return 31-Integer.numberOfLeadingZeros(this.rowlen);
         }
 
         public String getPrev() {
