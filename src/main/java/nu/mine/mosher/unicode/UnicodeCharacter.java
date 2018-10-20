@@ -65,6 +65,10 @@ public class UnicodeCharacter {
     }
 
     private String asChar() {
-        return new String(Character.toChars((int)this.codepoint));
+        try {
+            return new String(Character.toChars((int) this.codepoint));
+        } catch (final Throwable ignore) {
+            return "";
+        }
     }
 }
