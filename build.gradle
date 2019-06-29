@@ -1,10 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-group 'nu.mine.mosher.unicode'
-version '1.0.0-SNAPSHOT'
-mainClassName = 'nu.mine.mosher.unicode.UnicodeWebTest'
-
 repositories {
     mavenCentral()
 }
@@ -14,3 +10,7 @@ dependencies {
     implementation group: 'org.antlr', name: 'ST4', version: 'latest.release'
     implementation group: 'com.google.guava', name: 'guava', version: 'latest.release'
 }
+
+group 'nu.mine.mosher.unicode'
+mainClassName = 'nu.mine.mosher.unicode.UnicodeWebTest'
+version '1.0.0-SNAPSHOT'
