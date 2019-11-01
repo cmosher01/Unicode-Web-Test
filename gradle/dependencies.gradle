@@ -1,0 +1,10 @@
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.nanohttpd', name: 'nanohttpd', version: 'latest.integration'
+    implementation group: 'org.antlr', name: 'ST4', version: 'latest.release'
+    implementation group: 'com.google.guava', name: 'guava', version: 'latest.release'
+}

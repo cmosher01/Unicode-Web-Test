@@ -1,16 +1,7 @@
-apply plugin: 'java'
-apply plugin: 'application'
-
-repositories {
-    mavenCentral()
+def inc(module) {
+    apply from: "${projectDir}/gradle/${module}.gradle"
 }
 
-dependencies {
-    implementation group: 'org.nanohttpd', name: 'nanohttpd', version: 'latest.integration'
-    implementation group: 'org.antlr', name: 'ST4', version: 'latest.release'
-    implementation group: 'com.google.guava', name: 'guava', version: 'latest.release'
-}
-
-group 'nu.mine.mosher.unicode'
-mainClassName = 'nu.mine.mosher.unicode.UnicodeWebTest'
-version '1.0.0-SNAPSHOT'
+inc('version')
+inc('project')
+inc('dependencies')

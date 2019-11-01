@@ -5,6 +5,7 @@ import com.google.common.collect.Range;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,14 +60,19 @@ public class UnicodeManager {
     }
 
     private void addFromResource(final String resourceName) throws IOException {
-        try (final BufferedReader linesUnicodeCharacters = new BufferedReader(new InputStreamReader(UnicodeWebTest.class.getResourceAsStream(resourceName)))) {
-            linesUnicodeCharacters
-                    .lines()
-                    .map(String::trim)
-                    .filter(s -> !s.isEmpty())
-                    .filter(s -> !s.startsWith("#"))
-                    .map(s -> s.split(";"))
-                    .forEach(this::handleLine);
+        final InputStream resource = UnicodeWebTest.class.getResourceAsStream(resourceName);
+        if (Objects.isNull(resource)) {
+            System.err.println("Warning: cannot find Unicode Database text file. Codepoint names will not be shown. Run fetch_unicode.sh and re-build.");
+        } else {
+            try (final BufferedReader linesUnicodeCharacters = new BufferedReader(new InputStreamReader(resource))) {
+                linesUnicodeCharacters
+                        .lines()
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .filter(s -> !s.startsWith("#"))
+                        .map(s -> s.split(";"))
+                        .forEach(this::handleLine);
+            }
         }
     }
 

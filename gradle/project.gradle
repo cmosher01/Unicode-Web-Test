@@ -1,0 +1,11 @@
+apply plugin: ApplicationPlugin
+
+group = 'nu.mine.mosher.unicode'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
+application {
+    mainClassName = 'nu.mine.mosher.unicode.UnicodeWebTest'
+}
