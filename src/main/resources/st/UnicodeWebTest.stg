@@ -25,8 +25,8 @@ page(title,body) ::= <<
         <meta charset="utf-8">
         <title>$title$</title>
         <style>
-            @import url("https://cdn.jsdelivr.net/gh/cmosher01/PlainWebCss@master/src/main/resources/css/reset.css");
-            @import url("https://cdn.jsdelivr.net/gh/cmosher01/PlainWebCss@master/src/main/resources/css/solarized.css");
+            @import url("https://mosher.mine.nu/uniwebfonts/css/reset.css");
+            @import url("https://mosher.mine.nu/uniwebfonts/css/solarized.css");
             @import url("https://mosher.mine.nu/uniwebfonts/css/fonts.css");
             a:hover {
                 background-color: var(--sol-base2);
