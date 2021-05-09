@@ -24,33 +24,7 @@ page(title,body) ::= <<
     <head>
         <meta charset="utf-8">
         <title>$title$</title>
-        <style>
-            @import url("https://mosher.mine.nu/uniwebfonts/css/reset.css");
-            @import url("https://mosher.mine.nu/uniwebfonts/css/solarized.css");
-            @import url("https://mosher.mine.nu/uniwebfonts/css/fonts.css");
-            a:hover {
-                background-color: var(--sol-base2);
-                color: var(--sol-orange);
-            }
-            table {
-                width: 100%;
-            }
-            tr:nth-child(odd) {
-                background-color: var(--sol-base2);
-            }
-            td {
-                border: 1px solid black;
-                text-align: center;
-                vertical-align: middle;
-            }
-            .invalid {
-                color: var(--sol-base0);
-                background-color: var(--sol-base03);
-            }
-            nav {
-                text-align: center;
-            }
-        </style>
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
         $body$

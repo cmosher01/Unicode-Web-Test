@@ -6,6 +6,7 @@ import fi.iki.elonen.NanoHTTPD;
 import org.stringtemplate.v4.STGroupFile;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,9 @@ public class UnicodeWebTest {
             @Override
             public Response serve(final IHTTPSession session) {
                 try {
+                    if (session.getUri().endsWith(".css")) {
+                        return newFixedLengthResponse(Response.Status.OK, mimeTypes().get("css"), getStyle());
+                    }
                     final long start = longParam(session, "start", 0L);
                     final boolean compact = booleanParam(session, "compact", false);
                     final int rowlen = (int)1L << Longs.constrainToRange(longParam(session, "rowlen", 0x5L), 0L, LongMath.log2(PAGE_SIZE, CEILING));
@@ -44,6 +48,10 @@ public class UnicodeWebTest {
 
         System.out.flush();
         System.err.flush();
+    }
+
+    private static String getStyle() throws IOException {
+        return new String(UnicodeWebTest.class.getResourceAsStream("style.css").readAllBytes(), StandardCharsets.US_ASCII);
     }
 
     private static boolean booleanParam(final NanoHTTPD.IHTTPSession session, final String param, boolean def) {
