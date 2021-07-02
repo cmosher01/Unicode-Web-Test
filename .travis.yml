@@ -1,0 +1,10 @@
+---
+sudo: required
+services:
+  - docker
+script:
+  - 'docker build -t unicode-web-test .'
+after_success:
+  - 'docker login -u $DOCKER_USERNAME -p $DOCKER_TOKEN'
+  - 'docker tag unicode-web-test $DOCKER_USERNAME/unicode-web-test:latest'
+  - 'docker push $DOCKER_USERNAME/unicode-web-test:latest'
