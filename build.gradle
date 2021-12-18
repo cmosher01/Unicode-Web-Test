@@ -1,7 +1,28 @@
-def inc(module) {
-    apply from: "${projectDir}/gradle/${module}.gradle"
+plugins {
+    id "io.freefair.lombok" version "6.3.0"
+    id 'application'
 }
 
-inc('version')
-inc('project')
-inc('dependencies')
+version = '1.0.1'
+
+group = 'nu.mine.mosher.unicode'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.nanohttpd', name: 'nanohttpd', version: 'latest.integration'
+    implementation group: 'org.antlr', name: 'ST4', version: 'latest.release'
+    implementation group: 'com.google.guava', name: 'guava', version: 'latest.release'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of 17
+    }
+}
+
+application {
+    getMainClass().set 'nu.mine.mosher.unicode.UnicodeWebTest'
+}

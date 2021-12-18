@@ -1,16 +1,10 @@
 package nu.mine.mosher.unicode;
 
-import com.google.common.collect.BoundType;
-import com.google.common.collect.Range;
+import com.google.common.collect.*;
+import lombok.val;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.regex.Matcher;
+import java.io.*;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class UnicodeManager {
@@ -22,15 +16,19 @@ public class UnicodeManager {
     private UnicodeManager() {
     }
 
+
+
     public static UnicodeManager create() throws IOException {
-        final UnicodeManager unicodeMgr = new UnicodeManager();
+        val unicodeMgr = new UnicodeManager();
         unicodeMgr.addFromResource("/ucd/UnicodeData.txt");
         unicodeMgr.addFromResource("/ucsur/UnicodeData.txt");
         return unicodeMgr;
     }
 
+
+
     public UnicodeCharacter charFor(final long codepoint) {
-        UnicodeCharacter c = this.chars.get(codepoint);
+        var c = this.chars.get(codepoint);
         if (Objects.isNull(c)) {
             c = lookUpInRanges(codepoint);
         }
@@ -44,34 +42,32 @@ public class UnicodeManager {
         return this.codepointMax;
     }
 
+
+
     private UnicodeCharacter lookUpInRanges(final long codepoint) {
         return this.ranges
-                .entrySet()
-                .stream()
-                .filter(e -> e.getValue().contains(codepoint))
-                .findAny()
-                .map(Map.Entry::getKey)
-                .map(name -> asUnicodeChar(codepoint, name))
-                .orElse(null);
-    }
-
-    private static UnicodeCharacter asUnicodeChar(long codepoint, String name) {
-        return new UnicodeCharacter(codepoint, name, false);
+            .entrySet()
+            .stream()
+            .filter(e -> e.getValue().contains(codepoint))
+            .findAny()
+            .map(Map.Entry::getKey)
+            .map(name -> new UnicodeCharacter(codepoint, name, false))
+            .orElse(null);
     }
 
     private void addFromResource(final String resourceName) throws IOException {
-        final InputStream resource = UnicodeWebTest.class.getResourceAsStream(resourceName);
+        val resource = UnicodeWebTest.class.getResourceAsStream(resourceName);
         if (Objects.isNull(resource)) {
             System.err.println("Warning: cannot find Unicode Database text file. Codepoint names will not be shown. Run fetch_unicode.sh and re-build.");
         } else {
-            try (final BufferedReader linesUnicodeCharacters = new BufferedReader(new InputStreamReader(resource))) {
+            try (val linesUnicodeCharacters = new BufferedReader(new InputStreamReader(resource))) {
                 linesUnicodeCharacters
-                        .lines()
-                        .map(String::trim)
-                        .filter(s -> !s.isEmpty())
-                        .filter(s -> !s.startsWith("#"))
-                        .map(s -> s.split(";"))
-                        .forEach(this::handleLine);
+                    .lines()
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .filter(s -> !s.startsWith("#"))
+                    .map(s -> s.split(";"))
+                    .forEach(this::handleLine);
             }
         }
     }
@@ -79,11 +75,11 @@ public class UnicodeManager {
     private static final Pattern SPECIAL = Pattern.compile("<(.*,.*)>");
 
     private void handleLine(String[] r) {
-        final long codepoint = parseHex(r[0]);
-        final String name = r[1].trim().toLowerCase();
-        final boolean combining = parseCombining(r[3]);
+        val codepoint = parseHex(r[0]);
+        val name = r[1].trim().toLowerCase();
+        val combining = parseCombining(r[3]);
 
-        final Matcher matcher = SPECIAL.matcher(name);
+        val matcher = SPECIAL.matcher(name);
         if (matcher.matches()) {
             handleSpecial(codepoint, matcher.group(1));
         } else {
@@ -95,25 +91,27 @@ public class UnicodeManager {
         }
     }
 
+    @SuppressWarnings("unused")
     private enum BoundCommand {
         first, last
     }
 
     private void handleSpecial(final long codepoint, String name) {
-        final String[] parsedName = name.split(",", 2);
-        final String classRange = parsedName[0].trim();
-        final BoundCommand boundRange = BoundCommand.valueOf(parsedName[1].trim());
+        val parsedName = name.split(",", 2);
+        val classRange = parsedName[0].trim();
 
         if (classRange.contains("surrogate")) {
             // surrogates aren't characters
             return;
         }
 
-        final Range<Long> rangeHalf =
-                boundRange == BoundCommand.first ?
-                        Range.downTo(codepoint, BoundType.CLOSED) :
-                        Range.upTo(codepoint, BoundType.CLOSED);
-        Range<Long> r = this.ranges.get(classRange);
+        val boundRange = BoundCommand.valueOf(parsedName[1].trim());
+        val rangeHalf =
+            boundRange == BoundCommand.first ?
+                Range.downTo(codepoint, BoundType.CLOSED) :
+                Range.upTo(codepoint, BoundType.CLOSED);
+
+        var r = this.ranges.get(classRange);
         if (Objects.isNull(r)) {
             r = rangeHalf;
         } else {
@@ -122,7 +120,7 @@ public class UnicodeManager {
         this.ranges.put(classRange, r);
     }
 
-    private boolean parseCombining(String s) {
+    private static boolean parseCombining(String s) {
         return Integer.parseInt(s) > 0;
     }
 
