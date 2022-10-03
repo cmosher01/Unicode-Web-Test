@@ -1,4 +1,4 @@
-FROM amazoncorretto:17 AS build
+FROM eclipse-temurin:17-jdk-jammy AS build
 
 MAINTAINER Christopher A. Mosher <cmosher01@gmail.com>
 
@@ -6,38 +6,35 @@ USER root
 ENV HOME /root
 WORKDIR $HOME
 
-RUN echo "org.gradle.daemon=false" >gradle.properties
-
 COPY gradle/ gradle/
 COPY gradlew ./
 RUN ./gradlew --version
 
 COPY settings.gradle ./
+
+RUN mkdir -p $HOME/src/main/resources/ucd
+WORKDIR $HOME/src/main/resources/ucd
+RUN curl -LO 'https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt'
+
+RUN mkdir -p $HOME/src/main/resources/ucsur
+WORKDIR $HOME/src/main/resources/ucsur
+RUN curl -LO -H 'user-agent: Mozilla/5.0' 'http://www.kreativekorp.com/ucsur/UNIDATA/UnicodeData.txt'
+
+WORKDIR $HOME
+
 COPY build.gradle ./
 COPY src/ ./src/
 
-COPY fetch_unicode.sh ./
-RUN ./fetch_unicode.sh
-
-RUN ./gradlew build
+RUN ./gradlew -i build
 
 
 
-FROM amazoncorretto:17
+FROM tomcat:jdk17-temurin-jammy AS run
 
 USER root
 ENV HOME /root
 WORKDIR $HOME
 
-RUN yum -y install tar shadow-utils
+COPY src/main/tomcat /usr/local/tomcat/conf
 
-COPY --from=build /root/build/distributions/*.tar ./
-RUN tar xvf *.tar --strip-components=1 -C /usr/local
-
-RUN useradd user
-USER user
-ENV HOME /home/user
-WORKDIR $HOME
-
-EXPOSE 8080
-CMD ["unicode-web-test"]
+COPY --from=build /root/build/libs/*.war /usr/local/tomcat/webapps/ROOT.war

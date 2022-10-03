@@ -1,0 +1,29 @@
+---
+version: "3.8"
+
+volumes:
+  "tomcat_work":
+  "tomcat_temp":
+
+services:
+
+  "nginx":
+    image: "nginx"
+    volumes:
+      - type: "bind"
+        source: "./src/main/nginx/nginx.conf"
+        target: "/etc/nginx/nginx.conf"
+        read_only: true
+    ports:
+      - published: 60080
+        target: 80
+
+  "tomcat":
+    build: "./"
+    volumes:
+      - type: "volume"
+        source: "tomcat_work"
+        target: "/usr/local/tomcat/work"
+      - type: "volume"
+        source: "tomcat_temp"
+        target: "/usr/local/tomcat/temp"

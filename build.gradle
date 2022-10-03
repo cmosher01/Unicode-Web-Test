@@ -1,9 +1,9 @@
 plugins {
-    id "io.freefair.lombok" version "6.3.0"
-    id 'application'
+    id 'io.freefair.lombok' version '6.5.1'
+    id 'war'
 }
 
-version = '1.0.1'
+version = '1.1.0'
 
 group = 'nu.mine.mosher.unicode'
 
@@ -12,17 +12,14 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.nanohttpd', name: 'nanohttpd', version: 'latest.integration'
     implementation group: 'org.antlr', name: 'ST4', version: 'latest.release'
     implementation group: 'com.google.guava', name: 'guava', version: 'latest.release'
+
+    providedCompile group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: 'latest.integration'
 }
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of 17
     }
-}
-
-application {
-    getMainClass().set 'nu.mine.mosher.unicode.UnicodeWebTest'
 }

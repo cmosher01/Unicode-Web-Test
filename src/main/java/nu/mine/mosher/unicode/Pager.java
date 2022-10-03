@@ -1,26 +1,17 @@
 package nu.mine.mosher.unicode;
 
+import lombok.RequiredArgsConstructor;
+
 @SuppressWarnings("unused")
+@RequiredArgsConstructor
 public class Pager {
     public static final int PAGE_SIZE = 0x1000;
 
     public final long start;
-    public final long prev;
-    public final long next;
     public final long maxCodepoint;
     public final boolean compact;
     public final int rowlen;
     public final boolean invalid;
-
-    Pager(long start, long maxCodepoint, boolean compact, int rowlen, boolean invalid) {
-        this.start = start;
-        this.prev = start - PAGE_SIZE;
-        this.next = start + PAGE_SIZE;
-        this.maxCodepoint = maxCodepoint;
-        this.compact = compact;
-        this.rowlen = rowlen;
-        this.invalid = invalid;
-    }
 
     public String getStart() {
         return String.format("U+%03X\u00d7\u00d7\u00d7", this.start / PAGE_SIZE);
@@ -31,17 +22,17 @@ public class Pager {
     }
 
     public String getPrev() {
-        if (this.prev < 0) {
+        if (this.start - PAGE_SIZE < 0) {
             return f(this.maxCodepoint / PAGE_SIZE * PAGE_SIZE);
         }
-        return f(this.prev);
+        return f(this.start - PAGE_SIZE);
     }
 
     public String getNext() {
-        if (this.maxCodepoint < this.next) {
+        if (this.maxCodepoint < this.start + PAGE_SIZE) {
             return f(0);
         }
-        return f(this.next);
+        return f(this.start + PAGE_SIZE);
     }
 
     public boolean isCompact() {

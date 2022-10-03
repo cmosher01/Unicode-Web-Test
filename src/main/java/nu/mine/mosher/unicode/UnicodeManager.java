@@ -1,7 +1,7 @@
 package nu.mine.mosher.unicode;
 
 import com.google.common.collect.*;
-import lombok.val;
+import lombok.*;
 
 import java.io.*;
 import java.util.*;
@@ -18,7 +18,7 @@ public class UnicodeManager {
 
 
 
-    public static UnicodeManager create() throws IOException {
+    public static UnicodeManager create() {
         val unicodeMgr = new UnicodeManager();
         unicodeMgr.addFromResource("/ucd/UnicodeData.txt");
         unicodeMgr.addFromResource("/ucsur/UnicodeData.txt");
@@ -55,10 +55,11 @@ public class UnicodeManager {
             .orElse(null);
     }
 
-    private void addFromResource(final String resourceName) throws IOException {
+    @SneakyThrows
+    private void addFromResource(final String resourceName) {
         val resource = UnicodeWebTest.class.getResourceAsStream(resourceName);
         if (Objects.isNull(resource)) {
-            System.err.println("Warning: cannot find Unicode Database text file. Codepoint names will not be shown. Run fetch_unicode.sh and re-build.");
+            System.err.println("Warning: cannot find Unicode Database text file. Codepoint names will not be shown.");
         } else {
             try (val linesUnicodeCharacters = new BufferedReader(new InputStreamReader(resource))) {
                 linesUnicodeCharacters
